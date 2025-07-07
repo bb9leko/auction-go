@@ -8,6 +8,8 @@ RUN go mod download
 
 COPY . .
 
+COPY .env ./
+
 RUN go build -o /app/auction cmd/auction/main.go
 
 EXPOSE 8080
