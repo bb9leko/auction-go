@@ -1,12 +1,25 @@
-# 1. Pare qualquer MongoDB rodando
-```docker stop $(docker ps -q --filter "ancestor=mongo") 2>/dev/null || true```
+# 1. Build Imagem Docker
+```docker compose up --build```
 
-# 2. Inicie MongoDB limpo
-```docker run -d --name mongodb-test -p 27017:27017 mongo:latest --noauth```
+# 2. Log Container App
+```docker-compose logs -f app```
 
-# 3. Execute os testes
-```sleep 5```
-```go test ./internal/infra/database/auction -v```
+# 3. Curl para criar Leilão
+``` 
+curl -X POST http://localhost:8080/auction \                                                     
+  -H "Content-Type: application/json" \
+  -d '{
+    "product_name": "Test 77",
+    "category": "Electronics", 
+    "description": "Test description",
+    "condition": 0
+  }'
 
-# 4. Limpe
-```docker stop mongodb-test && docker rm mongodb-test```
+```
+
+# 4. Acessar container MongoDB
+```docker exec -it mongodb mongosh "mongodb://admin:admin@localhost:27017/auctions?authSource=admin"```
+
+```use auctions```
+
+```db.auctions.find().pretty()```
